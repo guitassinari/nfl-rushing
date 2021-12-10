@@ -1,6 +1,8 @@
 import React from 'react'
 import PlayerRushings from '.'
-import { render, within, act } from '@testing-library/react'
+import '@testing-library/jest-dom'
+import { render, within } from '@testing-library/react'
+import { waitForComponentAsyncUpdate } from '../../test-utils/async-helpers'
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
@@ -27,9 +29,7 @@ describe('Player rushings page', () => {
   it('fetches players rushings from the api', async () => {
     render(<PlayerRushings />)
 
-    await act(() =>
-      new Promise((resolve, _) => setTimeout(resolve, 0))
-    )
+    await waitForComponentAsyncUpdate()
 
     expect(global.fetch).toHaveBeenCalledWith('/player_rushings')
   })
@@ -44,17 +44,66 @@ describe('Player rushings page', () => {
       })
     })
 
+    it('shows no error alert', async() => {
+      const component = render(<PlayerRushings />)
+  
+      await waitForComponentAsyncUpdate()
+
+      expect(component.queryByRole('alert')).not.toBeInTheDocument()
+    })
+
     it('shows table of player rushings', async () => {
       const component = render(<PlayerRushings />)
 
-      await act(() =>
-        new Promise((resolve, _) => setTimeout(resolve, 0))
-      )
+      await waitForComponentAsyncUpdate()
 
       const table = component.getByRole('table')
       const rows = within(table).getAllByRole('row')
 
       expect(rows.length).toEqual(playerRushings.length + 1)
+    })
+  })
+
+  describe('when the player rushings query fails', () => {
+
+    beforeEach(() => {
+      const anyGlobal: any = global
+      anyGlobal.fetch = jest.fn(() => {
+        return Promise.reject(new Error('Error in fetch'))
+      })
+    })
+
+    it('shows an error alert message', async () => {
+      const component = render(<PlayerRushings />)
+
+      await waitForComponentAsyncUpdate()
+
+      const alert = within(component.getByRole('alert'))
+
+      expect(alert.getByText('Error in fetch')).toBeInTheDocument()
+    })
+
+    describe('when the error has no message', () => {
+      beforeEach(() => {
+        const anyGlobal: any = global
+        anyGlobal.fetch = jest.fn(() => {
+          return Promise.reject(new Error())
+        })
+      })
+
+      it('shows a default error alert message', async () => {
+        const component = render(<PlayerRushings />)
+  
+        await waitForComponentAsyncUpdate()
+  
+        const alert = within(component.getByRole('alert'))
+
+        expect(
+          alert.getByText(
+            "We couldn't find out what went wrong. Please contact our support team!"
+          )
+        ).toBeInTheDocument()
+      })
     })
   })
 })

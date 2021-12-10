@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { Table } from 'antd'
+import { Table, Alert } from 'antd'
+
+
 
 const PlayerRushings = () => {
+  const [error, setError] = useState(null)
   const [playerRushings, setPlayerRushings] = useState([])
 
   useEffect(() => {
     fetch('/player_rushings')
       .then(response => response.json())
       .then(setPlayerRushings)
+      .catch(setError)
   }, [])
   
   
@@ -97,7 +101,11 @@ const PlayerRushings = () => {
 
   return (
     <div>
-      <Table rowKey="player_name" dataSource={playerRushings} columns={columns} />;
+      {error && <Alert
+        type="error"
+        message={'Oops! Something wrong happened!'} 
+        description={error?.message || "We couldn't find out what went wrong. Please contact our support team!"} />}
+      <Table rowKey="player_name" dataSource={playerRushings} columns={columns} />
     </div>
   )
 }
