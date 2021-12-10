@@ -8,7 +8,7 @@ RSpec.describe "PlayerRushings", type: :request do
       get "/player_rushings"
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to eq(player_rushings.to_json)
+      expect(response.body).to eq(PlayerRushing.all.to_json)
     end
 
     context "when receives a search string" do
