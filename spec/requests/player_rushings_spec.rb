@@ -8,7 +8,7 @@ RSpec.describe "PlayerRushings", type: :request do
     let(:pagination_data) { parsed_response["pagination"] }
 
     it "returns all current player rushings" do
-      get "/player_rushings"
+      get "/player_rushings", params: {format: :json}
 
       expect(response).to have_http_status(:ok)
       expect(response_rushings).to eq(PlayerRushing.all.to_json)
@@ -20,7 +20,7 @@ RSpec.describe "PlayerRushings", type: :request do
       end
 
       it "searches player rushings by player name" do
-        get "/player_rushings?search=thew"
+        get "/player_rushings?search=thew", params: {format: :json}
 
         expect(response).to have_http_status(:ok)
         expect(response_rushings).to eq([player_with_matching_name].to_json)
@@ -28,7 +28,7 @@ RSpec.describe "PlayerRushings", type: :request do
 
       context "with capital letters" do
         it "searches player rushings by lowercase player name" do
-          get "/player_rushings?search=ThEw"
+          get "/player_rushings?search=ThEw", params: {format: :json}
   
           expect(response).to have_http_status(:ok)
           expect(response_rushings).to eq([player_with_matching_name].to_json)
@@ -37,7 +37,7 @@ RSpec.describe "PlayerRushings", type: :request do
 
       context "an empty search string" do
         it "returns all player rushings" do
-          get "/player_rushings?search="
+          get "/player_rushings?search=", params: {format: :json}
   
           expect(response).to have_http_status(:ok)
           expect(response_rushings).to eq(PlayerRushing.all.to_json)
@@ -48,7 +48,7 @@ RSpec.describe "PlayerRushings", type: :request do
     context "when receives a sort param" do
       context "for an forbidden sortable column" do
         it "returns the player rushings without any order" do
-          get "/player_rushings?sort_by=anything"
+          get "/player_rushings?sort_by=anything", params: {format: :json}
   
           expect(response).to have_http_status(:ok)
           expect(response_rushings).to eq(PlayerRushing.all.to_json)
@@ -61,7 +61,7 @@ RSpec.describe "PlayerRushings", type: :request do
 
         context "without speficic ordering" do
           it "orders by asc" do
-            get "/player_rushings?sort_by=longest_rush"
+            get "/player_rushings?sort_by=longest_rush", params: {format: :json}
 
             all_player_rushings = PlayerRushing.all
             rushings_ordered_by_number_longest_rush = all_player_rushings.sort_by { |p| [p.longest_rush_distance, p.longest_rush, p.id] }
@@ -73,7 +73,7 @@ RSpec.describe "PlayerRushings", type: :request do
 
         context "with order_by=asc" do 
           it "orders by asc" do
-            get "/player_rushings?sort_by=longest_rush&order_by=asc"
+            get "/player_rushings?sort_by=longest_rush&order_by=asc", params: {format: :json}
 
             all_player_rushings = PlayerRushing.all
             rushings_ordered_by_number_longest_rush = all_player_rushings.sort_by { |p| [p.longest_rush_distance, p.longest_rush, p.id] }
@@ -85,7 +85,7 @@ RSpec.describe "PlayerRushings", type: :request do
 
         context "with order_by=desc" do 
           it "orders by desc" do
-            get "/player_rushings?sort_by=longest_rush&order_by=desc"
+            get "/player_rushings?sort_by=longest_rush&order_by=desc", params: {format: :json}
 
             all_player_rushings = PlayerRushing.all
             rushings_ordered_by_number_longest_rush = all_player_rushings.sort_by { |p| [p.longest_rush_distance, p.longest_rush, p.id] }
@@ -101,7 +101,7 @@ RSpec.describe "PlayerRushings", type: :request do
         let!(:player_rushings_without_t) { create_list(:player_rushing, 5) }
 
         it "disconsiders the T and orders respectively by numeric longest rush, longest rush and then ID" do
-          get "/player_rushings?sort_by=longest_rush"
+          get "/player_rushings?sort_by=longest_rush", params: {format: :json}
 
           all_player_rushings = PlayerRushing.all
           rushings_ordered_by_number_longest_rush = all_player_rushings.sort_by { |p| [p.longest_rush_distance, p.longest_rush, p.id] }
@@ -114,7 +114,7 @@ RSpec.describe "PlayerRushings", type: :request do
       context "when sorting by total rushing yards" do
         context "without speficic ordering" do
           it "orders by asc" do
-            get "/player_rushings?sort_by=total_rushing_yards"
+            get "/player_rushings?sort_by=total_rushing_yards", params: {format: :json}
   
             expect(response).to have_http_status(:ok)
             expect(response_rushings).to eq(PlayerRushing.all.order(total_rushing_yards: :asc).to_json)
@@ -123,7 +123,7 @@ RSpec.describe "PlayerRushings", type: :request do
 
         context "with order_by=asc" do 
           it "orders by asc" do
-            get "/player_rushings?sort_by=total_rushing_yards&order_by=asc"
+            get "/player_rushings?sort_by=total_rushing_yards&order_by=asc", params: {format: :json}
     
             expect(response).to have_http_status(:ok)
             expect(response_rushings).to eq(PlayerRushing.all.order(total_rushing_yards: :asc).to_json)
@@ -132,7 +132,7 @@ RSpec.describe "PlayerRushings", type: :request do
 
         context "with order_by=desc" do 
           it "orders by desc" do
-            get "/player_rushings?sort_by=total_rushing_yards&order_by=desc"
+            get "/player_rushings?sort_by=total_rushing_yards&order_by=desc", params: {format: :json}
     
             expect(response).to have_http_status(:ok)
             expect(response_rushings).to eq(PlayerRushing.all.order(total_rushing_yards: :desc).to_json)
@@ -143,7 +143,7 @@ RSpec.describe "PlayerRushings", type: :request do
       context "when sorting by total rushing touchdowns" do
         context "without speficic ordering" do
           it "orders by asc" do
-            get "/player_rushings?sort_by=total_touchdowns"
+            get "/player_rushings?sort_by=total_touchdowns", params: {format: :json}
     
             expect(response).to have_http_status(:ok)
             expect(response_rushings).to eq(PlayerRushing.all.order(total_touchdowns: :asc).to_json)
@@ -152,7 +152,7 @@ RSpec.describe "PlayerRushings", type: :request do
 
         context "with order_by=asc" do 
           it "orders by asc" do
-            get "/player_rushings?sort_by=total_touchdowns&order_by=asc"
+            get "/player_rushings?sort_by=total_touchdowns&order_by=asc", params: {format: :json}
     
             expect(response).to have_http_status(:ok)
             expect(response_rushings).to eq(PlayerRushing.all.order(total_touchdowns: :asc).to_json)
@@ -161,7 +161,7 @@ RSpec.describe "PlayerRushings", type: :request do
 
         context "with order_by=desc" do 
           it "orders by desc" do
-            get "/player_rushings?sort_by=total_touchdowns&order_by=desc"
+            get "/player_rushings?sort_by=total_touchdowns&order_by=desc", params: {format: :json}
     
             expect(response).to have_http_status(:ok)
             expect(response_rushings).to eq(PlayerRushing.all.order(total_touchdowns: :desc).to_json)
@@ -174,7 +174,7 @@ RSpec.describe "PlayerRushings", type: :request do
       let!(:player_rushings) { create_list(:player_rushing, 100) }
 
       it "returns pagination metadata" do
-        get "/player_rushings"
+        get "/player_rushings", params: {format: :json}
   
           expect(response).to have_http_status(:ok)
           expect(pagination_data["current_page"]).to eq(1)
@@ -184,7 +184,7 @@ RSpec.describe "PlayerRushings", type: :request do
 
       context "when receives no page parameter" do
         it "returns the first page" do
-          get "/player_rushings"
+          get "/player_rushings", params: {format: :json}
   
           expect(response).to have_http_status(:ok)
           expect(response_rushings).to eq(PlayerRushing.limit(20).to_json)
@@ -194,7 +194,7 @@ RSpec.describe "PlayerRushings", type: :request do
       context "when receives a valid page parameter" do
         let(:page) { 3 }
         it "offsets the records accordingly" do
-          get "/player_rushings?page=#{page}"
+          get "/player_rushings?page=#{page}", params: {format: :json}
   
           expect(response).to have_http_status(:ok)
           expect(response_rushings).to eq(PlayerRushing.offset(20*(page-1)).limit(20).to_json)
@@ -204,7 +204,7 @@ RSpec.describe "PlayerRushings", type: :request do
       context "when receives an invalid page parameter" do
         let(:page) { "!abc" }
         it "returns the first page" do
-          get "/player_rushings?page=#{page}"
+          get "/player_rushings?page=#{page}", params: {format: :json}
   
           expect(response).to have_http_status(:ok)
           expect(response_rushings).to eq(PlayerRushing.limit(20).to_json)
@@ -222,12 +222,20 @@ RSpec.describe "PlayerRushings", type: :request do
       end
 
       it "work with together" do
-        get "/player_rushings?search=mathew&page=2&sort_by=total_rushing_yards"
+        get "/player_rushings?search=mathew&page=2&sort_by=total_rushing_yards", params: {format: :json}
   
         expect(response).to have_http_status(:ok)
         expect(response_rushings).to eq(
           searchable_players.sort_by { |a| [a.total_rushing_yards, a.id] }[20..39].to_json
         )
+      end
+    end
+
+    context "when receives request asking for csv" do
+      it "responds in csv format" do
+        get "/player_rushings", params: {format: :csv}
+
+        expect(response.header['Content-Type']).to include 'text/csv'
       end
     end
   end

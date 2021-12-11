@@ -73,4 +73,15 @@ RSpec.describe PlayerRushing, type: :model do
       end
     end
   end
+
+  describe "class.to_csv" do 
+    let(:player_rushings) { create_list(:player_rushing, 5) }
+
+    it "returns a csv file with headers" do
+      csv = player_rushings.to_csv
+      puts "RECEIVED CSV", csv.to_s
+
+      expect(csv).to eq([])
+    end
+  end
 end
