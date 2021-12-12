@@ -1,6 +1,8 @@
 module PaginationConcern
   extend ActiveSupport::Concern
 
+  private
+
   def paginate(query_results)
     query_results.offset(offset_index*page_size).limit(page_size)
   end
@@ -12,8 +14,6 @@ module PaginationConcern
       total_pages: (paginated_results.count / page_size).ceil
     }
   end
-
-  private
 
   def page_size
     20
