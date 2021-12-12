@@ -1,3 +1,5 @@
+require 'csv'
+
 module ToCsvAbleConcern
   extend ActiveSupport::Concern
 

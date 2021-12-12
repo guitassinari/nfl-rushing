@@ -1,5 +1,3 @@
-require 'csv'
-
 class PlayerRushing < ApplicationRecord
   include ToCsvAbleConcern
   
@@ -16,7 +14,6 @@ class PlayerRushing < ApplicationRecord
 
     order(Arel.sql("(regexp_replace(longest_rush, '\\D*','','g')::numeric) #{safe_ordering}, longest_rush #{safe_ordering}, id #{safe_ordering}"))
   }
-
 
   def longest_rush_distance
     return longest_rush.to_i unless longest_rush_is_touchdown?

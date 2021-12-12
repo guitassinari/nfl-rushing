@@ -1,5 +1,3 @@
-require 'csv'
-
 class PlayerRushingsController < ApplicationController
   include PaginationConcern
   SORTABLE_ATTRIBUTES = %w[total_rushing_yards longest_rush total_touchdowns]
