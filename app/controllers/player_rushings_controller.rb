@@ -31,7 +31,7 @@ class PlayerRushingsController < ApplicationController
       end
 
       format.csv do
-        send_data player_rushings.to_csv, filename: "player-rushings-#{Date.today}.csv", type: 'text/csv; charset=utf-8; header=present'
+        send_data player_rushings.to_csv, type: "text/csv; charset=UTF-8; header=present", disposition: "attachment;filename=teste.csv" 
       end
     end
     
@@ -40,7 +40,7 @@ class PlayerRushingsController < ApplicationController
   private
 
   def index_params
-    params.permit(:search, :sort_by, :order_by, :page)
+    params.permit(:search, :sort_by, :order_by, :page, :format)
   end
 
   def has_allowed_sorting_param?
