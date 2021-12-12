@@ -1,3 +1,5 @@
+require 'csv'
+
 class PlayerRushingsController < ApplicationController
   SORTABLE_ATTRIBUTES = %w[total_rushing_yards longest_rush total_touchdowns]
   PAGE_SIZE = 20
@@ -29,9 +31,8 @@ class PlayerRushingsController < ApplicationController
       end
 
       format.csv do
-        render csv: player_rushings.to_csv
+        send_data player_rushings.to_csv, filename: "player-rushings-#{Date.today}.csv", type: 'text/csv; charset=utf-8; header=present'
       end
-
     end
     
   end
