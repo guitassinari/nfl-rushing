@@ -1,6 +1,10 @@
 require 'csv'
 
 class PlayerRushing < ApplicationRecord
+  scope :search, ->(term) {
+    where('lower(player_name) LIKE ?', "%#{term.downcase}%")
+  }
+
   scope :order_by_numeric_longest_rush, ->(order_by = :asc) {
     safe_ordering = if [:asc, :desc].include?(order_by)
       order_by

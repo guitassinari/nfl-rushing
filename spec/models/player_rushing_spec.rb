@@ -37,7 +37,30 @@ RSpec.describe PlayerRushing, type: :model do
     end
   end
 
-  describe "class.order_by_numeric_longest_rush" do
+  describe "scope.search" do
+    let!(:other_rushings) { create_list(:player_rushing, 5) }
+    let!(:player_with_matching_name) do
+      create(:player_rushing, player_name: 'Mathew Silva')
+    end
+
+    it "searches player rushings by player name" do
+      expect(PlayerRushing.search("thew")).to match_array(PlayerRushing.where(id: player_with_matching_name.id))
+    end
+
+    context "with capital letters" do
+      it "searches player rushings by lowercase player name" do
+        expect(PlayerRushing.search("tHeW")).to match_array(PlayerRushing.where(id: player_with_matching_name.id))
+      end
+    end
+
+    context "an empty search string" do
+      it "returns all player rushings" do
+        expect(PlayerRushing.search("")).to match_array(PlayerRushing.all)
+      end
+    end
+  end
+
+  describe "scope.order_by_numeric_longest_rush" do
     let!(:player_rushings) do 
       [
         create(:player_rushing, longest_rush: '5T'),

@@ -7,7 +7,7 @@ class PlayerRushingsController < ApplicationController
   def index
     player_rushings = PlayerRushing.all
     if has_search?
-      player_rushings = player_rushings.where('lower(player_name) LIKE ?', "%#{index_params[:search].downcase}%")
+      player_rushings = player_rushings.search(index_params[:search])
     end
 
     if has_allowed_sorting_param?

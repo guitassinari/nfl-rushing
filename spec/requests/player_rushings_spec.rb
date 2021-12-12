@@ -12,6 +12,7 @@ RSpec.shared_examples "searchable" do |expected_format|
   end
 
   context "when receives a search string" do
+    let!(:other_rushings) { create_list(:player_rushing, 5) }
     let!(:player_with_matching_name) do
       create(:player_rushing, player_name: 'Mathew Silva')
     end
