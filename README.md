@@ -64,6 +64,8 @@ The backend application provides a single endpoint to fetch player rushings data
 
 The frontend application uses [Ant Design](https://ant.design/) to provide a friendly user interface.
 
+![image](https://user-images.githubusercontent.com/10967861/145908578-c3cb2e6f-8ae4-4a80-b1fd-d17f752ec6c1.png)
+
 ### System requirements
 
 In order to run this project you must the following tools
