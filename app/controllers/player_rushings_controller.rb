@@ -35,7 +35,7 @@ class PlayerRushingsController < ApplicationController
   private
 
   def index_params
-    params.permit(:search, :sort_by, :order_by, :page, :format)
+    params.permit(:search, :sort_by, :order_by, :format)
   end
 
   def has_allowed_sorting_param?
