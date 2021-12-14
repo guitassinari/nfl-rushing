@@ -57,7 +57,8 @@ If you have any questions regarding requirements, do not hesitate to email your 
 
 ### General information
 
-This is project was built using Ruby on Rails in the backend with Webpacker + ReactJS for the frontend.
+This is project was built using Ruby on Rails in the backend with Webpacker + ReactJS + TypeScript for the frontend.
+
 It was built to be run in a Docker environment, but can be also run in your machine directly.
 
 The backend application provides a single endpoint to fetch player rushings data. It allows for pagination, filtering and ordering the returned data. It also allows to export the requested data in CSV format.
@@ -68,7 +69,7 @@ The frontend application uses [Ant Design](https://ant.design/) to provide a fri
 
 ### System requirements
 
-In order to run this project you must the following tools
+In order to run this project you must install the following tools
 
 > Click any of them to see installation instructions
 
@@ -80,11 +81,11 @@ This project can be run either in your machine or using Docker. When running in 
 
 - [Postgres](https://www.postgresql.org/download/) >= 13.5
 
-If you're going to run it using Docker you also will need:
+If you're going to run it using Docker you will need:
 
 - [Docker](https://docs.docker.com/get-docker/) >= 20.10.8
 
-### Environment setup
+### Running the app
 
 Having installed all needed system requirements, its time to prepare your setup.
 
@@ -124,38 +125,66 @@ If everything went fine you should be able to see your application running at [l
    docker-compose build
    ```
 
-2. Run all containers
+2. Create and migrate the database
+    ```bash
+    docker-compose run web bundle exec rails db:create
+    docker-compose run web bundle exec rails db:migrate
+    docker-compose run web bundle exec rails db:seed
+    ```
+
+3. Run all containers
    ```bash
    docker-compose up
    ```
 
 ### Running tests
 
+This app uses [Rspec](https://rspec.info/) as testing framework for the backend along with [FactoryBot](https://github.com/thoughtbot/factory_bot) for entities/records creation.
+
+For the frontend we use [Jest](https://jestjs.io/) with [React-Testing-Library](https://testing-library.com/docs/react-testing-library/intro/).
+
 #### Running directly in your machine
 
+#### Backend
 1. Create and migrate test database
     ```bash
-    RAILS_ENV=test rails db:create
+    rails db:create
     RAILS_ENV=test rails db:migrate
     ```
 2. Run the tests
     ```bash
     bundle exec rspec
     ```
+##### Frontend
+Run 
+
+    ```
+    yarn test
+    ```
 
 #### Running in Docker
 
-1. Build imaages
+
+##### Backend
+1. Build images
     ```bash
     docker-compose build
     ```
 
 2. Create and migrate test database
     ```bash
-    docker-compose -e RAILS_ENV=test web bundle exec rails db:create
-    docker-compose -e RAILS_ENV=test web bundle exec rails db:migrate
+    docker-compose run web bundle exec rails db:create
+    docker-compose run -e RAILS_ENV=test web bundle exec rails db:migrate
     ```
 3. Run the tests
     ```bash
     docker-compose -e RAILS_ENV=test web bundle exec rspec
     ```
+
+##### 
+
+Run
+
+```
+docker-compose run web yarn test
+```
