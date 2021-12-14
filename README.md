@@ -55,8 +55,6 @@ If you have any questions regarding requirements, do not hesitate to email your 
 
 ## Installation and running this solution
 
-### General information
-
 This is project was built using Ruby on Rails in the backend with Webpacker + ReactJS + TypeScript for the frontend.
 
 It was built to be run in a Docker environment, but can be also run in your machine directly.
@@ -65,7 +63,13 @@ The backend application provides a single endpoint to fetch player rushings data
 
 The frontend application uses [Ant Design](https://ant.design/) to provide a friendly user interface.
 
+You can either [run it using Docker](#running-the-app-with-docker) or [run it directly in your machine](#running-directly-in-your-machine)
+
 ![image](https://user-images.githubusercontent.com/10967861/145908578-c3cb2e6f-8ae4-4a80-b1fd-d17f752ec6c1.png)
+
+This app uses [Rspec](https://rspec.info/) as testing framework for the backend along with [FactoryBot](https://github.com/thoughtbot/factory_bot) for entities/records creation.
+
+For the frontend we use [Jest](https://jestjs.io/) with [React-Testing-Library](https://testing-library.com/docs/react-testing-library/intro/).
 
 ### System requirements
 
@@ -85,141 +89,133 @@ If you're going to run it using Docker you will need:
 
 - [Docker](https://docs.docker.com/get-docker/) >= 20.10.8
 
-### Running the app
-
-Having installed all needed system requirements, its time to prepare your setup.
-
-#### Running directly in your machine
-
-1. Install Ruby gems and JavaScript packages
-    ```bash
-    bundle install
-    yarn install
-    ```
-2. Create, migrate and seed database
-    ```bash
-    rails db:create
-    rails db:migrate
-    ```
-
-3. Import rushings from json
- ```
-    docker-compose run web bundle exec rake player_rushing:import["<file_path>"]
- ```
- <details>
-  <summary>Example</summary>
-  ```
-    docker-compose run web bundle exec rake player_rushing:import["rushing.json"]
-  ```
-</details>
-
-<details>
-  <summary>You can also clear all player rushings from database</summary>
-  ```
-    docker-compose run web bundle exec rake player_rushing:clear
-  ```
-</details>
-
-4. Start the application and webpack server
-
-    In one terminal run
-    ```bash
-    DATABASE_HOST=<your_db_host> DATABASE_USERNAME=<your_db_username> DATABASE_PASSWORD=<your_db_password> rails s 
-    ```
-
-    In another terminal run
-    ```bash
-    ./bin/webpack --watch --progress
-    ```
-
-5. Access your app
-
-If everything went fine you should be able to see your application running at [localhost:3000](http://localhost:3000).
-
-#### Running with Docker
+### Running the app with Docker
 
 1. Build the docker images
-   ```bash
-   docker-compose build
-   ```
+```bash
+docker-compose build
+```
 
 2. Create and migrate the database
-    ```bash
-    docker-compose run web bundle exec rails db:create
-    docker-compose run web bundle exec rails db:migrate
-    ```
+```bash
+docker-compose run web bundle exec rails db:create
+docker-compose run web bundle exec rails db:migrate
+```
 3. Import rushings from json
- ```
-    bundle exec rake player_rushing:import["<file_path>"]
- ```
+
+```
+bundle exec rake player_rushing:import["<file_path>"]
+```
+
  <details>
   <summary>Example</summary>
-  ```
-    bundle exec rake player_rushing:import["rushing.json"]
-  ```
+
+```
+bundle exec rake player_rushing:import["rushing.json"]
+```
 </details>
 
 <details>
   <summary>You can also clear all player rushings from database</summary>
-  ```
-    bundle exec rake player_rushing:clear
-  ```
+    
+```
+bundle exec rake player_rushing:clear
+```
 </details>
 
 
 4. Run all containers
-   ```bash
-   docker-compose up
-   ```
+```bash
+docker-compose up
+```
 
 5. Access your app
 
 If everything went fine you should be able to see your application running at [localhost:3000](http://localhost:3000).
 
-### Running tests
+#### Running backend tests
+1. Build images
+```bash
+docker-compose build
+```
 
-This app uses [Rspec](https://rspec.info/) as testing framework for the backend along with [FactoryBot](https://github.com/thoughtbot/factory_bot) for entities/records creation.
+2. Create and migrate test database
+```bash
+docker-compose run web bundle exec rails db:create
+docker-compose run -e RAILS_ENV=test web bundle exec rails db:migrate
+```
+3. Run the tests
+```bash
+docker-compose -e RAILS_ENV=test web bundle exec rspec
+```
 
-For the frontend we use [Jest](https://jestjs.io/) with [React-Testing-Library](https://testing-library.com/docs/react-testing-library/intro/).
+#### Running frontend tests
+
+```
+docker-compose run web yarn test
+```
+
+
+### Running directly in your machine
+
+1. Install Ruby gems and JavaScript packages
+```bash
+bundle install
+yarn install
+```
+2. Create, migrate and seed database
+```bash
+rails db:create
+rails db:migrate
+```
+
+3. Import rushings from json
+```
+docker-compose run web bundle exec rake player_rushing:import["<file_path>"]
+```
+<details>
+  <summary>Example</summary>
+    
+docker-compose run web bundle exec rake player_rushing:import["rushing.json"]
+</details>
+
+<details>
+  <summary>You can also clear all player rushings from database</summary>
+    
+docker-compose run web bundle exec rake player_rushing:clear
+</details>
+
+4. Start the application and webpack server
+
+In one terminal run
+```bash
+DATABASE_HOST=<your_db_host> DATABASE_USERNAME=<your_db_username> DATABASE_PASSWORD=<your_db_password> rails s 
+```
+
+In another terminal run
+```bash
+./bin/webpack --watch --progress
+```
+
+5. Access your app
+
+If everything went fine you should be able to see your application running at [localhost:3000](http://localhost:3000).
+
 
 #### Running directly in your machine
 
 #### Backend
 1. Create and migrate test database
-    ```bash
-    rails db:create
-    RAILS_ENV=test rails db:migrate
-    ```
+```bash
+rails db:create
+RAILS_ENV=test rails db:migrate
+```
 2. Run the tests
-    ```bash
-    bundle exec rspec
-    ```
+```bash
+bundle exec rspec
+```
 #### Frontend
     
-    ```
-    yarn test
-    ```
-
-#### Running in Docker
-
-#### Backend
-1. Build images
-    ```bash
-    docker-compose build
-    ```
-
-2. Create and migrate test database
-    ```bash
-    docker-compose run web bundle exec rails db:create
-    docker-compose run -e RAILS_ENV=test web bundle exec rails db:migrate
-    ```
-3. Run the tests
-    ```bash
-    docker-compose -e RAILS_ENV=test web bundle exec rspec
-    ```
-
-##### Frontend
-
 ```
-docker-compose run web yarn test
+yarn test
 ```
