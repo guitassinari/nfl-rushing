@@ -100,9 +100,27 @@ Having installed all needed system requirements, its time to prepare your setup.
     ```bash
     rails db:create
     rails db:migrate
-    rails db:seed
     ```
-3. Start the application and webpack server
+
+3. Import rushings from json
+ ```
+    docker-compose run web bundle exec rake player_rushing:import["<file_path>"]
+ ```
+ <details>
+  <summary>Example</summary>
+  ```
+    docker-compose run web bundle exec rake player_rushing:import["rushing.json"]
+  ```
+</details>
+
+<details>
+  <summary>You can also clear all player rushings from database</summary>
+  ```
+    docker-compose run web bundle exec rake player_rushing:clear
+  ```
+</details>
+
+4. Start the application and webpack server
 
     In one terminal run
     ```bash
@@ -114,7 +132,7 @@ Having installed all needed system requirements, its time to prepare your setup.
     ./bin/webpack --watch --progress
     ```
 
-4. Access your app
+5. Access your app
 
 If everything went fine you should be able to see your application running at [localhost:3000](http://localhost:3000).
 
@@ -129,13 +147,34 @@ If everything went fine you should be able to see your application running at [l
     ```bash
     docker-compose run web bundle exec rails db:create
     docker-compose run web bundle exec rails db:migrate
-    docker-compose run web bundle exec rails db:seed
     ```
+3. Import rushings from json
+ ```
+    bundle exec rake player_rushing:import["<file_path>"]
+ ```
+ <details>
+  <summary>Example</summary>
+  ```
+    bundle exec rake player_rushing:import["rushing.json"]
+  ```
+</details>
 
-3. Run all containers
+<details>
+  <summary>You can also clear all player rushings from database</summary>
+  ```
+    bundle exec rake player_rushing:clear
+  ```
+</details>
+
+
+4. Run all containers
    ```bash
    docker-compose up
    ```
+
+5. Access your app
+
+If everything went fine you should be able to see your application running at [localhost:3000](http://localhost:3000).
 
 ### Running tests
 
@@ -155,17 +194,15 @@ For the frontend we use [Jest](https://jestjs.io/) with [React-Testing-Library](
     ```bash
     bundle exec rspec
     ```
-##### Frontend
-Run 
-
+#### Frontend
+    
     ```
     yarn test
     ```
 
 #### Running in Docker
 
-
-##### Backend
+#### Backend
 1. Build images
     ```bash
     docker-compose build
@@ -181,9 +218,7 @@ Run
     docker-compose -e RAILS_ENV=test web bundle exec rspec
     ```
 
-##### 
-
-Run
+##### Frontend
 
 ```
 docker-compose run web yarn test
